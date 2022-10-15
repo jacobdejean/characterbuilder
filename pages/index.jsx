@@ -1,9 +1,13 @@
 import Head from 'next/head'
 import Image from 'next/image'
 import styled from 'styled-components'
-import { useState } from 'react'
+import { useState, useRef, useEffect } from 'react'
 
-function usePushableState(array) {
+import QuickAction from '../components/QuickAction'
+import Preview from '../components/Preview'
+import List from '../components/List'
+
+export function usePushableState(array) {
   let [state, setState] = useState(array);
 
   let pushState = item => {
@@ -15,113 +19,128 @@ function usePushableState(array) {
   return [state, pushState]
 }
 
+let initialPopulated = false;
 
 export default function Home() {
-  let [rulesets, pushRuleset] = usePushableState([{ name: 'new ruleset' }])
-  let [collections, pushCollection] = usePushableState([])
-  let ruleset_list = []
+  let [traits, pushTrait] = usePushableState([])
 
-  ruleset_list = rulesets.map(ruleset => {
-    return <ListItem key={ruleset.name}>{ruleset.name}</ListItem>
-  })
+  function blankTrait() {
+    pushTrait({ 
+      name: 'TRAIT ' + traits.length,
+      tags: 'blank'
+    }) 
+  }
+
+  // load with sample data
+  useEffect(() => {
+    if(initialPopulated)
+      return;
+
+    const initial = [
+      { name: 'Juliet S', tags: 'character' },
+      { name: 'Banana', tags: 'prop' },
+      { name: 'Hat', tags: 'prop' },
+      { name: 'Pink Lighting', tags: 'effect' },
+      { name: 'Dark Lighting', tags: 'effect' },
+      { name: 'Bedroom', tags: 'scene' },
+      { name: 'Computers', tags: 'scene' }
+    ]
+
+    for(let trait of initial) {
+      traits.push(trait);
+    }
+
+    initialPopulated = true;
+
+    pushTrait({name: 'root', tags: 'root'})
+  }, [])
 
   return (
     <Global>
       <Card>
         <Title>
-          <p>RULESETS</p>
+          <Header>TRAITS</Header>
           <ActionArea>
-            <Action onClick={_ => { pushRuleset({ name: 'ruleset ' + rulesets.length }) }} i>
-              <img src='/asterisk.svg' />
-              NEW
-            </Action>
-            <Action>LOAD</Action>
+            <QuickAction copy={'NEW'} icon={'asterisk.svg'} click={_ => { blankTrait() }} />
+            <QuickAction copy={'LOAD'} icon={'folder-fill.svg'} click={_ => {  }} />
           </ActionArea>
         </Title>
-        <List items={ruleset_list} />
+        <Scroller>
+          <List items={traits} />
+        </Scroller>
+        <Generate>Generate</Generate>
       </Card>
+      <Viewport>
+        <Preview/>
+      </Viewport>
     </Global>
   )
 }
 
-export function List(props) {
-  return (
-    <ListWrapper>{props.items}</ListWrapper>
-  )
-}
-
-const Global = styled.div`
-   
-`;
+const Global = styled.div``
 
 const Card = styled.div`
   background-color: #FFFFFF;
   color: black;
   display: flex;
   flex-direction: column;
-  width: 30rem;
-  padding-top: 2rem;
+  row-gap: 1rem;
+  width: 40rem;
+  padding-top: 1rem;
   padding-left: 1rem;
   padding-right: 1rem;
-  badding-bottom: 1rem;
+  padding-bottom: 1rem;
   border: solid 2px #3D00B8;
 
   position: absolute;
-  top: 0;
-  left: 0;
-  bottom: 0;
+  top: 2rem;
+  left: 2rem;
+  bottom: 2rem;
   right: auto;
+  z-index: 2;
 `
 
-const Action = styled.button`
-  background: none;
-  border: none;
-  padding-top: 9px;
-  padding-bottom: 9px;
-  padding-left: 12px;
-  padding-right: 12px;
-  display: flex;
-  align-items: center;
-  &:hover {
-    background-color: #3D00B8;
-    color: white;
-    cursor: pointer;
+const Scroller = styled.div`
+  overflow: scroll;
+  flex: 1 1 auto;
+`
 
-    img {
-      filter: invert(100%);
-    }
-  }
-
-  img {
-    margin-right: 0.5rem;
-  }
-
-
+const Viewport = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 0;
 `
 
 const ActionArea = styled.div`
- 
- display: flex;
+  display: flex;
+`
+
+const Header = styled.h1`
+  margin-bottom: 0.5rem;
+  margin-top: 0rem;
 `
 
 const Title = styled.div`
-  border-bottom: solid 2px #3D00B8;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 1rem;
+  margin-bottom: 0rem;
 `
 
-const ListWrapper = styled.div`
-  background-color: #E0E0E0; 
-  padding: 0.5rem;
-  padding-top: 0.5rem;
-`
+const Generate = styled.button`
+  width: 100%;
+  font-family: 'Prompt';
+  font-size: 1.5rem;
+  flex: none;
+  letter-spacing: 1px;
 
-const ListItem = styled.div`
-  padding: 0.25rem;
-  &:hover {
-    background-color: #3D00B8;
-    color: white;
-  }
-`;
+  background: rgb(61,0,184);
+background: linear-gradient(90deg, rgba(61,0,184,1) 0%, rgba(107,37,249,1) 100%);
+  color: white;
+  border-radius: 5px;
+  outline: none;
+  border: none;
+`
