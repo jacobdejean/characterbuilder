@@ -1,16 +1,29 @@
 import { useEffect, useState } from 'react'
 import styled, { css } from 'styled-components'
+import { usePushableState } from '../pages'
 
 import ListItem from './ListItem'
 
 export default function List(props) {
     const [filter, setFilter] = useState('ALL')
+    const [items, pushItem] = usePushableState(props.items)
+    const [results, pushResult] = usePushableState(items)
+
+    function search(term) {
+        for (let i = 0; i < items.length; i++) {
+            if (items[i].name.includes(term)) {
+                pushResult(items[i])
+            }
+        }
+    }
+
+
 
     return (
         <Wrapper>
             <FilterArea>
-                <SearchIcon src={'/search.svg'}/>
-                <Search placeholder='SEARCH '></Search>
+                <SearchIcon src={'/search.svg'} />
+                <Search placeholder='SEARCH ' defaultValue='' onChange={evt => search(evt.target.value)}></Search>
                 <FilterOptions>
                     FILTER BY
                     <FilterOption selected={filter === 'ALL'} onClick={_ => setFilter('ALL')}>ALL</FilterOption>
@@ -19,7 +32,7 @@ export default function List(props) {
                 </FilterOptions>
             </FilterArea>
             <Items>
-                {props.items.map(trait => { return <ListItem key={trait.name} trait={trait} /> })}
+                {results.map(trait => { return <ListItem key={trait.name} trait={trait} /> })}
             </Items>
             <Empty hidden={props.items && props.items.length > 0}>EMPTY TRAIT COLLECTION</Empty>
         </Wrapper>
