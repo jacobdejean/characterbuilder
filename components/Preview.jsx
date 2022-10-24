@@ -14,9 +14,9 @@ export default function Preview(props) {
         <ambientLight />
         <pointLight position={[10, 10, 10]} />
         <Trait
-          source={'/models/modern_bedroom/scene.gltf'}
-          position={{ x: -3, y: -2, z: 4 }}
-          rotation={{ x: 0, y: Math.PI / -3.5, z: 0 }}
+          source={'/models/computers_background/scene.gltf'}
+          position={{ x: 0, y: -3, z: 0 }}
+          rotation={{ x: 0, y: 0, z: 0 }}
           traits={[{
             name: 'juliet starling',
             source: '/models/juliet starling/scene.gltf',

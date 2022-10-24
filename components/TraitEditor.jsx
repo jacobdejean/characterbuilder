@@ -4,8 +4,18 @@ import Field from './Field'
 import QuickAction from "./QuickAction";
 import Button from './Button'
 import SocketEditor from "./SocketEditor";
+import { usePushableState } from "../pages";
 
 export default function TraitEditor(props) {
+    const [sockets, pushSocket] = usePushableState(props.trait.sockets)
+
+    function newSocket() {
+        pushSocket({
+            name: 'new socket',
+            transform: ''
+        })
+    }
+
     return (
         <Wrapper>
             <Settings>
@@ -14,18 +24,22 @@ export default function TraitEditor(props) {
                     onChange={ value => { props.trait.name = value; props.onNameChange(value)}} />
                 <Field name={'TAGS'} initial={props.trait.tags} 
                     onChange={ value => { props.trait.tags = value; props.onTagChange(value)}}
-                    last={true} />
+                    />
                 <SectionTitle>Probability</SectionTitle>
-                <Field name={'COUNT'} last={true}/>
+                <Field name={'COUNT'}/>
             </Settings>
             <Sockets>
                 <TitleArea>
                     <SectionTitle>Sockets</SectionTitle>
                     <Actions>
-                        <QuickAction copy={'ADD'} icon={'record2-fill.svg'} short={true}/>
+                        <QuickAction 
+                            copy={'ADD'} 
+                            icon={'record2-fill.svg'} 
+                            click={_ => { newSocket() }} 
+                            short={true}/>
                     </Actions>
                 </TitleArea>
-                <SocketEditor trait={props.trait}/>
+                <SocketEditor sockets={sockets}/>
             </Sockets>
         </Wrapper>
     )

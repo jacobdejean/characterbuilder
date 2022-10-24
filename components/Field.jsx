@@ -2,7 +2,7 @@ import styled, {css} from 'styled-components'
 
 export default function Field(props) {
     return (
-        <Wrapper last={props.last}>
+        <Wrapper>
             <Label htmlFor={props.name}>{props.name}</Label>        
             <Input name={props.name} defaultValue={props.initial} onChange={evt => props.onChange(evt.target.value)}/>
         </Wrapper>
@@ -10,16 +10,12 @@ export default function Field(props) {
 }
 
 const Wrapper = styled.div`
-    border-top: solid 1px lightgray;
+    border-bottom: solid 1px lightgray;
     padding: 0.5rem;
     padding-left: 0.5rem;
     padding-right: 0.5rem;
     margin-left: -0.5rem;
     display: flex;
-
-    ${props => props.last && css`
-        border-bottom: solid 1px lightgray;
-    `}
 `
 
 const Label = styled.label`

@@ -37,13 +37,13 @@ export default function Home() {
       return;
 
     const initial = [
-      { name: 'Juliet S', tags: 'character' },
-      { name: 'Banana', tags: 'prop' },
-      { name: 'Hat', tags: 'prop' },
-      { name: 'Pink Lighting', tags: 'effect' },
-      { name: 'Dark Lighting', tags: 'effect' },
-      { name: 'Bedroom', tags: 'scene' },
-      { name: 'Computers', tags: 'scene' }
+      { name: 'Juliet S', tags: 'character', sockets: [] },
+      { name: 'Banana', tags: 'prop', sockets: [] },
+      { name: 'Hat', tags: 'prop', sockets: [] },
+      { name: 'Pink Lighting', tags: 'effect', sockets: [] },
+      { name: 'Dark Lighting', tags: 'effect', sockets: [] },
+      { name: 'Bedroom', tags: 'scene', sockets: [] },
+      { name: 'Computers', tags: 'scene', sockets: [] }
     ]
 
     for(let trait of initial) {
@@ -52,7 +52,7 @@ export default function Home() {
 
     initialPopulated = true;
 
-    pushTrait({name: 'root', tags: 'root'})
+    pushTrait({name: 'root', tags: 'root', sockets: []})
   }, [])
 
   return (
